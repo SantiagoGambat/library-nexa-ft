@@ -3,26 +3,26 @@ import type { Usuario } from "../models/Usuario";
 
 const ENDPOINT = "/usuarios";
 
-export const usuariosService = {
-  listar: () =>
+export const usersService = {
+  list: () =>
     apiRequest<Usuario[]>(ENDPOINT),
 
-  obtener: (id: number) =>
+  getById: (id: number) =>
     apiRequest<Usuario>(`${ENDPOINT}/${id}`),
 
-  crear: (usuario: Usuario) =>
+  create: (user: Usuario) =>
     apiRequest<Usuario>(ENDPOINT, {
       method: "POST",
-      body: JSON.stringify(usuario),
+      body: JSON.stringify(user),
     }),
 
-  actualizar: (id: number, usuario: Usuario) =>
+  update: (id: number, user: Usuario) =>
     apiRequest<Usuario>(`${ENDPOINT}/${id}`, {
       method: "PUT",
-      body: JSON.stringify(usuario),
+      body: JSON.stringify(user),
     }),
 
-  eliminar: (id: number) =>
+  delete: (id: number) =>
     apiRequest<void>(`${ENDPOINT}/${id}`, {
       method: "DELETE",
     }),
