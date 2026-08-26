@@ -1,8 +1,8 @@
 export interface Libro {
   id?: number;
-  isbn: string;
   titulo: string;
+  isbn: string;
+  edicion: string;
+  fechaPublicacion?: string;
   autor: string;
-  editorial?: string;
-  anioPublicacion?: number;
 }

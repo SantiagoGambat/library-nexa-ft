@@ -3,26 +3,26 @@ import type { Libro } from "../models/Libro";
 
 const ENDPOINT = "/libros";
 
-export const librosService = {
-  listar: () =>
+export const booksService = {
+  list: () =>
     apiRequest<Libro[]>(ENDPOINT),
 
-  obtener: (id: number) =>
+  getById: (id: number) =>
     apiRequest<Libro>(`${ENDPOINT}/${id}`),
 
-  crear: (libro: Libro) =>
+  create: (book: Libro) =>
     apiRequest<Libro>(ENDPOINT, {
       method: "POST",
-      body: JSON.stringify(libro),
+      body: JSON.stringify(book),
     }),
 
-  actualizar: (id: number, libro: Libro) =>
+  update: (id: number, book: Libro) =>
     apiRequest<Libro>(`${ENDPOINT}/${id}`, {
       method: "PUT",
-      body: JSON.stringify(libro),
+      body: JSON.stringify(book),
     }),
 
-  eliminar: (id: number) =>
+  delete: (id: number) =>
     apiRequest<void>(`${ENDPOINT}/${id}`, {
       method: "DELETE",
     }),
