@@ -1043,8 +1043,8 @@ export default function LoanForm({
               const loanDate = new Date(value);
               const now = new Date();
 
-              if (loanDate < now) {
-                return "La fecha de préstamo no puede ser anterior a la fecha actual.";
+              if (loanDate <= now) {
+                return "La fecha de préstamo debe ser mayor a la actual(tiempo), pero solo en tiempo , en fecha puede ser el mismo dia.";
               }
 
               return true;
