@@ -50,7 +50,7 @@ Ejecutar el contenedor:
 La aplicación estará disponible en:
 
 
-    http://localhost:8080
+    http://localhost:5173
 
 ## Comandos útiles
 
