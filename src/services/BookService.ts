@@ -10,6 +10,9 @@ export const booksService = {
   getById: (id: number) =>
     apiRequest<Libro>(`${ENDPOINT}/${id}`),
 
+  getAvailable: () =>
+    apiRequest<Libro[]>(`${ENDPOINT}/disponibles`),
+
   create: (book: Libro) =>
     apiRequest<Libro>(ENDPOINT, {
       method: "POST",

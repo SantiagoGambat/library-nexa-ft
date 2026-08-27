@@ -43,7 +43,7 @@ Construir la imagen:
 Ejecutar el contenedor:
 
     docker run -d \
-      -p 8080:80 \
+      -p 5173:80 \
       --name library-nexa \
       library-nexa
 

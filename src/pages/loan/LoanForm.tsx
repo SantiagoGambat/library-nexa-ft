@@ -30,7 +30,7 @@ interface PrestamoFormProps {
   onCancel: () => void;
 }
 
-const MAX_VISIBLE_RESULTS = 8;
+const MAX_VISIBLE_RESULTS = 1000;
 
 export default function LoanForm({
   initialValues,
@@ -161,7 +161,7 @@ export default function LoanForm({
       try {
         setIsLoadingBooks(true);
 
-        const data = await booksService.list();
+        const data = await booksService.getAvailable();
 
         setBooks(data);
       } catch (error) {
@@ -1014,6 +1014,61 @@ export default function LoanForm({
         </p>
       </div>
 
+
+            {/* ================================
+          FECHA PRÉSTAMO
+      ================================= */}
+
+      <div>
+        <label
+          htmlFor="fechaPrestamo"
+          className="mb-2 block text-sm font-medium text-slate-700"
+        >
+          Fecha de préstamo
+        </label>
+
+        <input
+          id="fechaPrestamo"
+          type="datetime-local"
+          disabled={loading}
+          {...register("fechaPrestamo", {
+            required:
+              "La fecha de préstamo es obligatoria.",
+
+            validate: (value) => {
+              if (!value) {
+                return "La fecha de préstamo es obligatoria.";
+              }
+
+              const loanDate = new Date(value);
+              const now = new Date();
+
+              if (loanDate < now) {
+                return "La fecha de préstamo no puede ser anterior a la fecha actual.";
+              }
+
+              return true;
+            },
+          })}
+          className={inputClass(
+            errors.fechaPrestamo?.message
+          )}
+        />
+
+        {errors.fechaPrestamo && (
+          <p className="mt-1.5 text-xs font-medium text-red-600">
+            {errors.fechaPrestamo.message}
+          </p>
+        )}
+
+        <p className="mt-1.5 text-xs text-slate-400">
+          Si seleccionas hoy, el préstamo quedará
+          activo. Si seleccionas una fecha futura,
+          quedará programado.
+        </p>
+      </div>
+
+
       {/* ================================
           FECHA DEVOLUCIÓN
       ================================= */}
@@ -1039,11 +1094,17 @@ export default function LoanForm({
                 return "La fecha de devolución es obligatoria.";
               }
 
-              const returnDate = new Date(value);
-              const now = new Date();
+              const loanDate = watch("fechaPrestamo");
 
-              if (returnDate <= now) {
-                return "La fecha de devolución debe ser posterior a la fecha actual.";
+              if (!loanDate) {
+                return "Primero selecciona la fecha de préstamo.";
+              }
+
+              const returnDate = new Date(value);
+              const loanDateTime = new Date(loanDate);
+
+              if (returnDate <= loanDateTime) {
+                return "La fecha de devolución debe ser posterior a la fecha de préstamo.";
               }
 
               return true;
@@ -1065,6 +1126,7 @@ export default function LoanForm({
           devolver el libro.
         </p>
       </div>
+
 
       {/* ================================
           ACCIONES

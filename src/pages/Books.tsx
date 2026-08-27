@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 
 import type { Libro } from "../models/Libro";
-import {
-  initialAlert,
-  type AlertState,
-} from "../models/Alert";
+import { initialAlert, type AlertState } from "../models/Alert";
 
 import Button from "../components/commons/Button";
 import Modal from "../components/commons/Modal";
@@ -13,9 +10,7 @@ import Loader from "../components/commons/Loader";
 import ConfirmModal from "../components/commons/ConfirmModal";
 
 import BookTable from "./book/BookTable";
-import BookForm, {
-  type LibroFormData,
-} from "./book/BookForm";
+import BookForm, { type LibroFormData } from "./book/BookForm";
 
 import { booksService } from "../services/BookService";
 
@@ -27,31 +22,22 @@ const emptyBook: LibroFormData = {
   autor: "",
 };
 
-const delay = (ms: number) =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default function Books() {
   const [libros, setLibros] = useState<Libro[]>([]);
 
-  const [editingBook, setEditingBook] =
-    useState<Libro | null>(null);
+  const [editingBook, setEditingBook] = useState<Libro | null>(null);
 
-  const [isModalOpen, setIsModalOpen] =
-    useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [isLoading, setIsLoading] =
-    useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [loadingMessage, setLoadingMessage] =
-    useState("Cargando...");
+  const [loadingMessage, setLoadingMessage] = useState("Cargando...");
 
-  const [alert, setAlert] =
-    useState<AlertState>(initialAlert);
+  const [alert, setAlert] = useState<AlertState>(initialAlert);
 
-  const [confirmDelete, setConfirmDelete] =
-    useState<Libro | null>(null);
-
-    
+  const [confirmDelete, setConfirmDelete] = useState<Libro | null>(null);
 
   /**
    * Iniciar loader global
@@ -101,10 +87,7 @@ export default function Books() {
     try {
       startLoading("Cargando libros...");
 
-      const [data] = await Promise.all([
-        booksService.list(),
-        delay(800),
-      ]);
+      const [data] = await Promise.all([booksService.list(), delay(800)]);
 
       setLibros(data);
     } catch (error) {
@@ -158,9 +141,7 @@ export default function Books() {
   /**
    * Guardar libro
    */
-  const handleSave = async (
-    data: LibroFormData,
-  ) => {
+  const handleSave = async (data: LibroFormData) => {
     const book: Libro = {
       ...data,
       titulo: data.titulo.trim(),
@@ -169,22 +150,14 @@ export default function Books() {
       autor: data.autor.trim(),
     };
 
-    const isEditing =
-      editingBook !== null;
+    const isEditing = editingBook !== null;
 
     try {
-      startLoading(
-        isEditing
-          ? "Actualizando libro..."
-          : "Creando libro...",
-      );
+      startLoading(isEditing ? "Actualizando libro..." : "Creando libro...");
 
       await Promise.all([
         isEditing
-          ? booksService.update(
-              editingBook.id!,
-              book,
-            )
+          ? booksService.update(editingBook.id!, book)
           : booksService.create(book),
 
         delay(1000),
@@ -195,9 +168,7 @@ export default function Books() {
 
       showAlert(
         "success",
-        isEditing
-          ? "Libro actualizado"
-          : "Libro creado",
+        isEditing ? "Libro actualizado" : "Libro creado",
         isEditing
           ? "El libro fue actualizado correctamente."
           : "El libro fue creado correctamente.",
@@ -207,11 +178,12 @@ export default function Books() {
     } catch (error) {
       console.error(error);
 
-      showAlert(
-        "error",
-        "No se pudo guardar el libro",
-        "Ocurrió un error al guardar el libro.",
-      );
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Ocurrió un error al guardar el libro.";
+
+      showAlert("error", "No se pudo guardar el libro", message);
     } finally {
       stopLoading();
     }
@@ -231,18 +203,13 @@ export default function Books() {
   /**
    * Eliminar libro
    */
-  const deleteBookById = async (
-    id: number,
-  ) => {
+  const deleteBookById = async (id: number) => {
     try {
       setConfirmDelete(null);
 
       startLoading("Eliminando libro...");
 
-      await Promise.all([
-        booksService.delete(id),
-        delay(800),
-      ]);
+      await Promise.all([booksService.delete(id), delay(800)]);
 
       showAlert(
         "success",
@@ -254,11 +221,12 @@ export default function Books() {
     } catch (error) {
       console.error(error);
 
-      showAlert(
-        "error",
-        "No se pudo eliminar el libro",
-        "Ocurrió un error al eliminar el libro.",
-      );
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Ocurrió un error al eliminar el libro.";
+
+      showAlert("error", "No se pudo eliminar el libro", message);
     } finally {
       stopLoading();
     }
@@ -267,17 +235,15 @@ export default function Books() {
   /**
    * Valores iniciales del formulario
    */
-  const initialFormValues: LibroFormData =
-    editingBook
-      ? {
-          titulo: editingBook.titulo,
-          isbn: editingBook.isbn,
-          edicion: editingBook.edicion,
-          fechaPublicacion:
-            editingBook.fechaPublicacion ?? "",
-          autor: editingBook.autor,
-        }
-      : emptyBook;
+  const initialFormValues: LibroFormData = editingBook
+    ? {
+        titulo: editingBook.titulo,
+        isbn: editingBook.isbn,
+        edicion: editingBook.edicion,
+        fechaPublicacion: editingBook.fechaPublicacion ?? "",
+        autor: editingBook.autor,
+      }
+    : emptyBook;
 
   return (
     <section>
@@ -288,20 +254,14 @@ export default function Books() {
             Administración
           </p>
 
-          <h1 className="text-2xl font-bold text-slate-900">
-            Libros
-          </h1>
+          <h1 className="text-2xl font-bold text-slate-900">Libros</h1>
 
           <p className="mt-1 text-sm text-slate-500">
-            Administra el catálogo de libros de la
-            biblioteca.
+            Administra el catálogo de libros de la biblioteca.
           </p>
         </div>
 
-        <Button
-          onClick={handleCreate}
-          disabled={isLoading}
-        >
+        <Button onClick={handleCreate} disabled={isLoading}>
           + Nuevo libro
         </Button>
       </div>
@@ -317,11 +277,7 @@ export default function Books() {
       {/* FORMULARIO */}
       <Modal
         open={isModalOpen}
-        title={
-          editingBook !== null
-            ? "Editar libro"
-            : "Nuevo libro"
-        }
+        title={editingBook !== null ? "Editar libro" : "Nuevo libro"}
         onClose={handleCloseForm}
       >
         <BookForm
@@ -353,22 +309,16 @@ export default function Books() {
         }
         confirmText="Sí, eliminar"
         cancelText="Cancelar"
-        onCancel={() =>
-          setConfirmDelete(null)
-        }
+        onCancel={() => setConfirmDelete(null)}
         onConfirm={() => {
           if (confirmDelete?.id) {
-            deleteBookById(
-              confirmDelete.id,
-            );
+            deleteBookById(confirmDelete.id);
           }
         }}
       />
 
       {/* LOADER GLOBAL */}
-      {isLoading && (
-        <Loader message={loadingMessage} />
-      )}
+      {isLoading && <Loader message={loadingMessage} />}
     </section>
   );
 }

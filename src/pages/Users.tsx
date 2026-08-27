@@ -144,18 +144,19 @@ export default function Users() {
     } catch (error) {
       console.error(error);
 
-      showAlert(
-        "error",
-        "No se pudo guardar el usuario",
-        "Ocurrió un error al guardar el usuario.",
-      );
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Ocurrió un error al guardar el usuario.";
+
+      showAlert("error", "No se pudo guardar el usuario", message);
     } finally {
       stopLoading();
     }
   };
 
   const handleDelete = async (user: Usuario) => {
-    if(user.id){
+    if (user.id) {
       setConfirmDelete(user!);
     }
   };
@@ -176,11 +177,12 @@ export default function Users() {
     } catch (error) {
       console.error(error);
 
-      showAlert(
-        "error",
-        "No se pudo eliminar el usuario",
-        "Ocurrió un error al eliminar el usuario.",
-      );
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Ocurrió un error al eliminar el usuario.";
+
+      showAlert("error", "No se pudo eliminar el usuario", message);
     } finally {
       stopLoading();
     }

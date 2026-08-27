@@ -1,5 +1,5 @@
 export interface Prestamo {
-  id: number;
+  id?: number;
   usuarioId: number;
   isbn: string;
   ejemplarId: number;

@@ -1,4 +1,3 @@
-// src/pages/book/EjemplaresModal.tsx
 
 import { useEffect, useState } from "react";
 
@@ -11,7 +10,6 @@ import type { Libro } from "../../models/Libro";
 import type { Ejemplar } from "../../models/Ejemplar";
 
 import EjemplarTable from "./EjemplarTable";
-
 
 import { ejemplarService } from "../../services/EjemplarService";
 import type { EjemplarFormData } from "./EjemplarForm";
@@ -32,23 +30,17 @@ export default function EjemplaresModal({
   open,
   onClose,
 }: EjemplaresModalProps) {
-  const [ejemplares, setEjemplares] =
-    useState<Ejemplar[]>([]);
+  const [ejemplares, setEjemplares] = useState<Ejemplar[]>([]);
 
-  const [loading, setLoading] =
-    useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const [editing, setEditing] =
-    useState<Ejemplar | null>(null);
+  const [editing, setEditing] = useState<Ejemplar | null>(null);
 
-  const [formOpen, setFormOpen] =
-    useState(false);
+  const [formOpen, setFormOpen] = useState(false);
 
-  const [confirmDelete, setConfirmDelete] =
-    useState<Ejemplar | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<Ejemplar | null>(null);
 
-  const [error, setError] =
-    useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const loadEjemplares = async () => {
     if (!libro?.id) {
@@ -58,18 +50,13 @@ export default function EjemplaresModal({
     try {
       setLoading(true);
 
-      const data =
-        await ejemplarService.listByBook(
-          libro.id
-        );
+      const data = await ejemplarService.listByBook(libro.id);
 
       setEjemplares(data);
     } catch (error) {
       console.error(error);
 
-      setError(
-        "No fue posible cargar los ejemplares."
-      );
+      setError("No fue posible cargar los ejemplares.");
     } finally {
       setLoading(false);
     }
@@ -86,16 +73,12 @@ export default function EjemplaresModal({
     setFormOpen(true);
   };
 
-  const handleEdit = (
-    ejemplar: Ejemplar
-  ) => {
+  const handleEdit = (ejemplar: Ejemplar) => {
     setEditing(ejemplar);
     setFormOpen(true);
   };
 
-  const handleSave = async (
-    data: EjemplarFormData
-  ) => {
+  const handleSave = async (data: EjemplarFormData) => {
     if (!libro?.id) {
       return;
     }
@@ -105,21 +88,13 @@ export default function EjemplaresModal({
 
       const request = {
         libroId: libro.id,
-        codigoInventario:
-          data.codigoInventario
-            .trim()
-            .toUpperCase(),
+        codigoInventario: data.codigoInventario.trim().toUpperCase(),
       };
 
       if (editing?.id) {
-        await ejemplarService.update(
-          editing.id,
-          request
-        );
+        await ejemplarService.update(editing.id, request);
       } else {
-        await ejemplarService.create(
-          request
-        );
+        await ejemplarService.create(request);
       }
 
       setFormOpen(false);
@@ -130,7 +105,7 @@ export default function EjemplaresModal({
       console.error(error);
 
       setError(
-        "No fue posible guardar el ejemplar. Verifica que el código de inventario no esté repetido."
+        "No fue posible guardar el ejemplar. Verifica que el código de inventario no esté repetido.",
       );
     } finally {
       setLoading(false);
@@ -146,17 +121,18 @@ export default function EjemplaresModal({
       setConfirmDelete(null);
       setLoading(true);
 
-      await ejemplarService.delete(
-        confirmDelete.id
-      );
+      await ejemplarService.delete(confirmDelete.id);
 
       await loadEjemplares();
     } catch (error) {
       console.error(error);
 
-      setError(
-        "No fue posible eliminar el ejemplar. Si tiene un préstamo asociado, verifica las reglas del backend."
-      );
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Ocurrió un error al eliminar el ejemplar.";
+
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -170,6 +146,8 @@ export default function EjemplaresModal({
     <>
       <Modal
         open={open}
+        className="max-w-[50vw]"
+
         title={`Ejemplares - ${libro.titulo}`}
         onClose={() => {
           if (!loading) {
@@ -185,15 +163,10 @@ export default function EjemplaresModal({
                 Gestión de ejemplares
               </p>
 
-              <p className="mt-1 text-xs text-slate-500">
-                ISBN: {libro.isbn}
-              </p>
+              <p className="mt-1 text-xs text-slate-500">ISBN: {libro.isbn}</p>
             </div>
 
-            <Button
-              onClick={handleCreate}
-              disabled={loading}
-            >
+            <Button onClick={handleCreate} disabled={loading}>
               + Nuevo ejemplar
             </Button>
           </div>
@@ -211,11 +184,8 @@ export default function EjemplaresModal({
       {/* FORMULARIO */}
       <Modal
         open={formOpen}
-        title={
-          editing
-            ? "Editar ejemplar"
-            : "Nuevo ejemplar"
-        }
+        title={editing ? "Editar ejemplar" : "Nuevo ejemplar"}
+
         onClose={() => {
           if (!loading) {
             setFormOpen(false);
@@ -228,8 +198,7 @@ export default function EjemplaresModal({
           initialValues={
             editing
               ? {
-                  codigoInventario:
-                    editing.codigoInventario,
+                  codigoInventario: editing.codigoInventario,
                 }
               : emptyForm
           }
@@ -254,9 +223,7 @@ export default function EjemplaresModal({
         }
         confirmText="Sí, eliminar"
         cancelText="Cancelar"
-        onCancel={() =>
-          setConfirmDelete(null)
-        }
+        onCancel={() => setConfirmDelete(null)}
         onConfirm={handleDelete}
       />
 
