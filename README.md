@@ -1,75 +1,88 @@
-# React + TypeScript + Vite
+# Library Nexa Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web para la gestión de una biblioteca desarrollada con React, TypeScript y Vite.
 
-Currently, two official plugins are available:
+## Tecnologías
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS 4
+- React Router
+- React Hook Form
+- Lucide React
+- Docker
+- Nginx
 
-## React Compiler
+## Requisitos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Docker
 
-## Expanding the ESLint configuration
+No es necesario instalar Node.js, npm ni Nginx localmente.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Variables de entorno
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+El proyecto incluye un archivo `.env.example` con la configuración necesaria.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Primero, copia el archivo, en la raiz de proyecto poner este comando: 
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+    cp .env.example .env
 
-```
+El archivo `.env` debe contener:
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+    VITE_API_URL=http://localhost:8080/api/v1
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Si el backend se encuentra en otra dirección, modifica `VITE_API_URL` según corresponda.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Ejecución con Docker
 
-```
+Construir la imagen:
+
+    docker build -t library-nexa .
+
+Ejecutar el contenedor:
+
+    docker run -d \
+      -p 8080:80 \
+      --name library-nexa \
+      library-nexa
+
+La aplicación estará disponible en:
+
+
+    http://localhost:8080
+
+## Comandos útiles
+
+Ver el contenedor:
+
+    docker ps
+
+Ver los logs:
+
+    docker logs -f library-nexa
+
+Detener el contenedor:
+
+    docker stop library-nexa
+
+Eliminar el contenedor:
+
+    docker rm library-nexa
+
+## Estructura
+
+    frontend/
+    ├── src/
+    ├── public/
+    ├── .env
+    ├── .env.example
+    ├── Dockerfile
+    ├── nginx.conf
+    ├── .dockerignore
+    ├── .gitignore
+    ├── package.json
+    ├── package-lock.json
+    ├── tsconfig.json
+    ├── vite.config.ts
+    └── README.md

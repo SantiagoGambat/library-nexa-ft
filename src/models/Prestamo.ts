@@ -1,8 +1,9 @@
 export interface Prestamo {
-  id?: number;
+  id: number;
   usuarioId: number;
+  isbn: string;
   ejemplarId: number;
   fechaPrestamo: string;
-  fechaDevolucion?: string;
-  estado?: string;
+  fechaDevolucion: string;
+  estadoPrestamo: string;
 }

@@ -13,7 +13,7 @@ interface UsuarioFormProps {
   onCancel: () => void;
 }
 
-export default function UsuarioForm({
+export default function UserForm({
   initialValues,
   editingId,
   loading,

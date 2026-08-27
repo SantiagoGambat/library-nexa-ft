@@ -12,12 +12,12 @@ import AlertModal from "../components/commons/AlertModal";
 import Loader from "../components/commons/Loader";
 import ConfirmModal from "../components/commons/ConfirmModal";
 
-import LibroTable from "./libro/LibroTable";
-import LibroForm, {
+import BookTable from "./book/BookTable";
+import BookForm, {
   type LibroFormData,
-} from "./libro/LibroForm";
+} from "./book/BookForm";
 
-import { booksService } from "../services/bookService";
+import { booksService } from "../services/BookService";
 
 const emptyBook: LibroFormData = {
   titulo: "",
@@ -30,7 +30,7 @@ const emptyBook: LibroFormData = {
 const delay = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
-export default function Libros() {
+export default function Books() {
   const [libros, setLibros] = useState<Libro[]>([]);
 
   const [editingBook, setEditingBook] =
@@ -50,6 +50,8 @@ export default function Libros() {
 
   const [confirmDelete, setConfirmDelete] =
     useState<Libro | null>(null);
+
+    
 
   /**
    * Iniciar loader global
@@ -305,7 +307,7 @@ export default function Libros() {
       </div>
 
       {/* TABLA */}
-      <LibroTable
+      <BookTable
         libros={libros}
         loading={isLoading}
         onEdit={handleEdit}
@@ -322,7 +324,7 @@ export default function Libros() {
         }
         onClose={handleCloseForm}
       >
-        <LibroForm
+        <BookForm
           initialValues={initialFormValues}
           editingId={editingBook?.id ?? null}
           loading={isLoading}

@@ -1,3 +1,5 @@
+import { useEffect, useMemo, useState } from "react";
+
 import Button from "../../components/commons/Button";
 import type { Usuario } from "../../models/Usuario";
 
@@ -9,13 +11,73 @@ interface UsuarioTableProps {
   onDelete: (usuario: Usuario) => void;
 }
 
-export default function UsuarioTable({
+const PAGE_SIZE = 5;
+
+export default function UserTable({
   usuarios,
   loading,
   deletingId,
   onEdit,
   onDelete,
 }: UsuarioTableProps) {
+  const [currentPage, setCurrentPage] =
+    useState(1);
+
+  const totalPages = Math.ceil(
+    usuarios.length / PAGE_SIZE
+  );
+
+  const paginatedUsers = useMemo(() => {
+    const startIndex =
+      (currentPage - 1) * PAGE_SIZE;
+
+    const endIndex =
+      startIndex + PAGE_SIZE;
+
+    return usuarios.slice(
+      startIndex,
+      endIndex
+    );
+  }, [usuarios, currentPage]);
+
+  useEffect(() => {
+    if (
+      totalPages > 0 &&
+      currentPage > totalPages
+    ) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const handlePreviousPage = () => {
+    setCurrentPage((previous) =>
+      Math.max(previous - 1, 1)
+    );
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((previous) =>
+      Math.min(
+        previous + 1,
+        totalPages
+      )
+    );
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const firstItem =
+    usuarios.length === 0
+      ? 0
+      : (currentPage - 1) * PAGE_SIZE + 1;
+
+  const lastItem = Math.min(
+    currentPage * PAGE_SIZE,
+    usuarios.length
+  );
+
   if (loading) {
     return null;
   }
@@ -61,7 +123,7 @@ export default function UsuarioTable({
                 </td>
               </tr>
             ) : (
-              usuarios.map((usuario) => (
+              paginatedUsers.map((usuario) => (
                 <tr
                   key={usuario.id}
                   className="transition hover:bg-slate-50"
@@ -99,7 +161,9 @@ export default function UsuarioTable({
                     <div className="flex justify-end gap-2">
                       <Button
                         variant="secondary"
-                        disabled={deletingId !== null}
+                        disabled={
+                          deletingId !== null
+                        }
                         onClick={() =>
                           onEdit(usuario)
                         }
@@ -109,12 +173,15 @@ export default function UsuarioTable({
 
                       <Button
                         variant="danger"
-                        disabled={deletingId !== null}
+                        disabled={
+                          deletingId !== null
+                        }
                         onClick={() =>
-                          onDelete(usuario!)
+                          onDelete(usuario)
                         }
                       >
-                        {deletingId === usuario.id
+                        {deletingId ===
+                        usuario.id
                           ? "Eliminando..."
                           : "Eliminar"}
                       </Button>
@@ -126,6 +193,76 @@ export default function UsuarioTable({
           </tbody>
         </table>
       </div>
+
+      {/* Pagination */}
+      {usuarios.length > 0 && (
+        <div className="flex flex-col gap-4 border-t border-slate-100 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-slate-500">
+            Mostrando{" "}
+            <span className="font-medium text-slate-700">
+              {firstItem}
+            </span>{" "}
+            a{" "}
+            <span className="font-medium text-slate-700">
+              {lastItem}
+            </span>{" "}
+            de{" "}
+            <span className="font-medium text-slate-700">
+              {usuarios.length}
+            </span>{" "}
+            usuarios
+          </p>
+
+          <div className="flex items-center gap-1">
+            <Button
+              variant="secondary"
+              disabled={
+                currentPage === 1 ||
+                deletingId !== null
+              }
+              onClick={handlePreviousPage}
+            >
+              Anterior
+            </Button>
+
+            <div className="flex items-center gap-1">
+              {Array.from(
+                { length: totalPages },
+                (_, index) => index + 1
+              ).map((page) => (
+                <button
+                  key={page}
+                  type="button"
+                  disabled={
+                    deletingId !== null
+                  }
+                  onClick={() =>
+                    handlePageChange(page)
+                  }
+                  className={`flex h-9 min-w-9 items-center justify-center rounded-lg px-3 text-sm font-medium transition ${
+                    currentPage === page
+                      ? "bg-teal-600 text-white"
+                      : "text-slate-600 hover:bg-slate-100"
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+
+            <Button
+              variant="secondary"
+              disabled={
+                currentPage === totalPages ||
+                deletingId !== null
+              }
+              onClick={handleNextPage}
+            >
+              Siguiente
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

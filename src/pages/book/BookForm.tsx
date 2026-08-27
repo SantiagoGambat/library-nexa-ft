@@ -13,7 +13,7 @@ interface LibroFormProps {
   onCancel: () => void;
 }
 
-export default function LibroForm({
+export default function BookForm({
   initialValues,
   editingId,
   loading,

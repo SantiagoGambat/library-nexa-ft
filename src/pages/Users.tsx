@@ -8,10 +8,10 @@ import Modal from "../components/commons/Modal";
 import AlertModal from "../components/commons/AlertModal";
 import Loader from "../components/commons/Loader";
 
-import UsuarioTable from "./usuario/UsuarioTable";
-import UsuarioForm, { type UsuarioFormData } from "./usuario/UsuarioForm";
+import UserTable from "./user/UserTable";
+import UserForm, { type UsuarioFormData } from "./user/UserForm";
 import ConfirmModal from "../components/commons/ConfirmModal";
-import { usersService } from "../services/userService";
+import { usersService } from "../services/UserService";
 
 const emptyUser: UsuarioFormData = {
   nombre: "",
@@ -22,8 +22,8 @@ const emptyUser: UsuarioFormData = {
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export default function Usuarios() {
-  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+export default function Users() {
+  const [users, setUsers] = useState<Usuario[]>([]);
 
   const [editingUser, setEditingUser] = useState<Usuario | null>(null);
 
@@ -72,7 +72,7 @@ export default function Usuarios() {
 
       const [data] = await Promise.all([usersService.list(), delay(800)]);
 
-      setUsuarios(data);
+      setUsers(data);
     } catch (error) {
       console.error(error);
 
@@ -217,8 +217,8 @@ export default function Usuarios() {
       </div>
 
       {/* Table */}
-      <UsuarioTable
-        usuarios={usuarios}
+      <UserTable
+        usuarios={users}
         loading={isLoading}
         deletingId={null}
         onEdit={handleEdit}
@@ -231,7 +231,7 @@ export default function Usuarios() {
         title={editingUser !== null ? "Editar usuario" : "Nuevo usuario"}
         onClose={handleCloseForm}
       >
-        <UsuarioForm
+        <UserForm
           initialValues={initialFormValues}
           editingId={editingUser?.id ?? null}
           loading={isLoading}

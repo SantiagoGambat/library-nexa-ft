@@ -17,8 +17,25 @@ export default function Layout() {
             </p>
           </div>
 
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-100 font-semibold text-teal-700">
-            A
+          <div className="flex items-center gap-3">
+            <div className="text-right">
+              <p className="text-sm font-semibold text-slate-900">Santiago Gamba</p>
+
+              <p className="text-xs text-slate-400">santiago.gamba26@email.com</p>
+
+              <a
+                href="https://www.linkedin.com/in/santiagogdev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-medium text-teal-600 transition-colors hover:text-teal-700 hover:underline"
+              >
+                Ver LinkedIn →
+              </a>
+            </div>
+
+            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-teal-100 text-sm font-bold text-teal-700 ring-4 ring-teal-50">
+              S
+            </div>
           </div>
         </header>
 

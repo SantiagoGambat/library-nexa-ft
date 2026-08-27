@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import Dashboard from "./pages/Dashboard";
-import Usuarios from "./pages/Usuarios";
-import Libros from "./pages/Libros";
+import Users from "./pages/Users";
+import Books from "./pages/Books";
+import Loans from "./pages/Loans";
 
 function Placeholder({ title }: { title: string }) {
   return (
@@ -21,14 +22,14 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/usuarios" element={<Usuarios />} />
+          <Route path="/usuarios" element={<Users />} />
           <Route
             path="/libros"
-            element={<Libros />}
+            element={<Books />}
           />
           <Route
             path="/prestamos"
-            element={<Placeholder title="Préstamos" />}
+            element={<Loans />}
           />
         </Route>
       </Routes>
